@@ -1,0 +1,10 @@
+node_modules/
+typings/
+build/
+
+.vscode/
+jsconfig.json
+
+.DS_Store
+.tmp
+.swp
