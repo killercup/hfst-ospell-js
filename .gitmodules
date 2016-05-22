@@ -1,0 +1,3 @@
+[submodule "hfst-ospell"]
+	path = lib/hfst-ospell
+	url = https://github.com/hfst/hfst-ospell.git
