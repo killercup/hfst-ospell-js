@@ -1,8 +1,9 @@
 import test from 'ava';
-import {hello} from "./build/release/hfst-ospell";
+import {spellcheck} from "./build/Release/hfst-ospell";
 
 test("bindings work", t => {
-    t.is(hello("world"), "hello, world");
-    t.throws(() => hello(), /wrong number of arguments/i);
-    t.throws(() => hello(12), /should be string/i);
+    t.throws(() => spellcheck(), /wrong number of arguments/i);
+    t.throws(() => spellcheck(12), /should be string/i);
+
+    t.truthy(spellcheck("schinken"));
 });
