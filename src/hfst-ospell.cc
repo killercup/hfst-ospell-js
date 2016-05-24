@@ -29,7 +29,7 @@ void Spellcheck(const Nan::FunctionCallbackInfo<v8::Value>& args) {
     v8::Isolate* isolate = args.GetIsolate();
 
     // FIXME: Read file name from function arguments 
-    const char* file_name = "/Users/pascal/Downloads/ck-ospell-stuff/se.zhfst";
+    const char* file_name = "etc/se.zhfst";
 
     // Initialize the spell checker
     //
