@@ -4,11 +4,12 @@ using v8::String;
 using v8::Local;
 using v8::Array;
 
-#import <ospell.h>
-#import <ZHfstOspeller.h>
+#import "ospell.h"
+#import "ZHfstOspeller.h"
 
 using hfst_ol::ZHfstOspeller;
 using hfst_ol::Transducer;
+
 
 void Spellcheck(const Nan::FunctionCallbackInfo<v8::Value>& args) {
     // Validate JS calling signature 
@@ -28,7 +29,7 @@ void Spellcheck(const Nan::FunctionCallbackInfo<v8::Value>& args) {
     v8::Isolate* isolate = args.GetIsolate();
 
     // FIXME: Read file name from function arguments 
-    const char* file_name = "~/Downloads/se.zhfst";
+    const char* file_name = "/Users/pascal/Downloads/ck-ospell-stuff/se.zhfst";
 
     // Initialize the spell checker
     //
@@ -39,25 +40,22 @@ void Spellcheck(const Nan::FunctionCallbackInfo<v8::Value>& args) {
     try {
         speller.read_zhfst(file_name);
     } catch (hfst_ol::ZHfstMetaDataParsingError zhmdpe) {
-        // std::stringstream error;
-        // error << "cannot finish reading zhfst archive " << file_name << ":\n"
-        //     << zhmdpe.what() << ".\n";
-        // Nan::ThrowError(String::NewFromUtf8(isolate, error.str().c_str()));
-        Nan::ThrowError(String::NewFromUtf8(isolate, "cannot finish reading zhfst archive"));
+        std::stringstream error;
+        error << "cannot finish reading zhfst archive " << file_name << ":\n"
+            << zhmdpe.what() << ".\n";
+        Nan::ThrowError(String::NewFromUtf8(isolate, error.str().c_str()));
         return;
     } catch (hfst_ol::ZHfstZipReadingError zhzre) {
-        // std::stringstream error;
-        // error << "cannot read zhfst archive " << file_name << ":\n"
-        //     << zhzre.what() << ".\n";
-        // Nan::ThrowError(String::NewFromUtf8(isolate, error.str().c_str()));
-        Nan::ThrowError(String::NewFromUtf8(isolate, "cannot read zhfst archive"));
+        std::stringstream error;
+        error << "cannot read zhfst archive " << file_name << ":\n"
+            << zhzre.what() << ".\n";
+        Nan::ThrowError(String::NewFromUtf8(isolate, error.str().c_str()));
         return;
     } catch (hfst_ol::ZHfstXmlParsingError zhxpe) {
-        // std::stringstream error;
-        // error << "Cannot finish reading index.xml from " << file_name << ":\n"
-        //     << zhxpe.what() << ".\n";
-        // Nan::ThrowError(String::NewFromUtf8(isolate, error.str().c_str()));
-        Nan::ThrowError(String::NewFromUtf8(isolate, "Cannot finish reading index.xml"));
+        std::stringstream error;
+        error << "Cannot finish reading index.xml from " << file_name << ":\n"
+            << zhxpe.what() << ".\n";
+        Nan::ThrowError(String::NewFromUtf8(isolate, error.str().c_str()));
         return;
     }
     
