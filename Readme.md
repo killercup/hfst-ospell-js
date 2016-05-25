@@ -30,6 +30,8 @@ Use `npm test` to verify the library works on the node side. Please note that th
 ## TODO
 
 - [x] Make it compile!
+- [ ] Async with a small JS wrapper for Promise support
+- [ ] Use a constructor for the wrapped C++ object so we can re-use the loaded spell checker
 - [ ] Everything with TODO and FIXME in code!
 - [ ] Compile tinyxml2 ourselves (it's just one file)
 - [ ] Compile libarchive ourselves (it's a truckload of stuff)

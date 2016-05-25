@@ -36,7 +36,7 @@ void Spellcheck(const Nan::FunctionCallbackInfo<v8::Value>& args) {
     // TODO: Use node wrapper for native objects to initialize and free this
     //       instead of reading the file every time.
     ZHfstOspeller speller;
-    
+
     try {
         speller.read_zhfst(file_name);
     } catch (hfst_ol::ZHfstMetaDataParsingError zhmdpe) {
@@ -58,7 +58,7 @@ void Spellcheck(const Nan::FunctionCallbackInfo<v8::Value>& args) {
         Nan::ThrowError(String::NewFromUtf8(isolate, error.str().c_str()));
         return;
     }
-    
+
     // Set some options
     //
     // TODO: Set options via arguments (option object)
@@ -73,7 +73,7 @@ void Spellcheck(const Nan::FunctionCallbackInfo<v8::Value>& args) {
         args.GetReturnValue().Set(v8::Boolean::New(isolate, false));
         return;
     }
-    
+
     hfst_ol::CorrectionQueue corrections = speller.suggest(word);
 
     v8::Handle<Array> correctionsArray = Array::New(isolate, corrections.size());
@@ -83,7 +83,7 @@ void Spellcheck(const Nan::FunctionCallbackInfo<v8::Value>& args) {
         args.GetReturnValue().Set(v8::Handle<Array>());
         return;
     }
-    
+
     // Populate the array
     unsigned int i = 0;
     while (corrections.size() > 0) {
@@ -96,9 +96,9 @@ void Spellcheck(const Nan::FunctionCallbackInfo<v8::Value>& args) {
     args.GetReturnValue().Set(correctionsArray);
 }
 
-void Init(v8::Local<v8::Object> exports) {  
-    exports->Set(Nan::New("spellcheck").ToLocalChecked(),
-                 Nan::New<v8::FunctionTemplate>(Spellcheck)->GetFunction());
+NAN_MODULE_INIT(InitAll) {
+    Nan::Set(target, Nan::New<v8::String>("spellcheck").ToLocalChecked(),
+        Nan::GetFunction(Nan::New<v8::FunctionTemplate>(Spellcheck)).ToLocalChecked());
 }
 
-NODE_MODULE(Spellcheck, Init)
+NODE_MODULE(addon, InitAll)
