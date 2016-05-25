@@ -1,20 +1,35 @@
 import test from 'ava';
-import {spellcheck} from "./build/Release/hfst-ospell";
+import {SpellChecker} from "./build/Debug/hfst-ospell";
 
-test("bindings work", (t) => {
-    t.throws(() => spellcheck(), /wrong number of arguments/i);
-    t.throws(() => spellcheck(12), /should be a string/i);
+test("constructor works", (t) => {
+    const spellchecker = new SpellChecker("etc/se.zhfst");
+
+    t.throws(() => new SpellChecker(), /wrong number of arguments/i);
+    t.throws(() => new SpellChecker(2), /should be a string/i);
+});
+
+test("spell check signature", (t) => {
+    const spellchecker = new SpellChecker("etc/se.zhfst");
+
+    t.throws(() => spellchecker.check(), /wrong number of arguments/i);
+    t.throws(() => spellchecker.check(2), /should be a string/i);
 });
 
 test("no suggestions for correct word", (t) => {
-    t.deepEqual(spellcheck("Lákku"), false);
+    const spellchecker = new SpellChecker("etc/se.zhfst");
+
+    t.deepEqual(spellchecker.check("Lákku"), false);
 });
 
 test("spelling suggestions", (t) => {
-    t.deepEqual(spellcheck("akkusativa"),
+    const spellchecker = new SpellChecker("etc/se.zhfst");
+
+    t.deepEqual(spellchecker.check("akkusativa"),
         ['akkusatiivva', 'akkusatiiva', 'akkusatiivan']);
 });
 
 test("no spelling suggestions possible", (t) => {
-    t.deepEqual(spellcheck("apfelkuchen"), []);
+    const spellchecker = new SpellChecker("etc/se.zhfst");
+
+    t.deepEqual(spellchecker.check("apfelkuchen"), []);
 });
