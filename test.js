@@ -1,5 +1,5 @@
 import test from 'ava';
-import {SpellChecker} from "./build/Debug/hfst-ospell";
+import {SpellChecker} from "./";
 
 test("constructor works", (t) => {
     const spellchecker = new SpellChecker("etc/se.zhfst");

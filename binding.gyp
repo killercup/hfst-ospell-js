@@ -7,7 +7,8 @@
         "lib/hfst-ospell/ZHfstOspeller.cc",
         "lib/hfst-ospell/hfst-ol.cc",
         "lib/hfst-ospell/ZHfstOspellerXmlMetadata.cc",
-        "src/hfst-ospell.cc",
+        "src/addon.cc",
+        "src/spellchecker.cc",
       ],
       'defines': [
         'HAVE_DLFCN_H=1',
