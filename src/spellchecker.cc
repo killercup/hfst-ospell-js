@@ -16,7 +16,7 @@ void SpellChecker::Init(v8::Local<v8::Object> exports) {
   tpl->InstanceTemplate()->SetInternalFieldCount(1);
 
   // Prototype
-  Nan::SetPrototypeMethod(tpl, "check", Check);
+  Nan::SetPrototypeMethod(tpl, "suggestions", Suggestions);
 
   constructor.Reset(tpl->GetFunction());
   exports->Set(Nan::New("SpellChecker").ToLocalChecked(), tpl->GetFunction());
@@ -75,9 +75,7 @@ void SpellChecker::New(const Nan::FunctionCallbackInfo<v8::Value> &info) {
     // speller.set_beam(-1.0);
     // speller.set_time_cutoff(0.0);
 
-
     SpellChecker *obj = new SpellChecker(speller);
-
 
     obj->Wrap(info.This());
     info.GetReturnValue().Set(info.This());
@@ -89,10 +87,10 @@ void SpellChecker::New(const Nan::FunctionCallbackInfo<v8::Value> &info) {
     v8::Local<v8::Function> cons = Nan::New<v8::Function>(constructor);
     info.GetReturnValue().Set(cons->NewInstance(argc, argv));
   }
-
 }
 
-void SpellChecker::Check(const Nan::FunctionCallbackInfo<v8::Value> &info) {
+void SpellChecker::Suggestions(
+    const Nan::FunctionCallbackInfo<v8::Value> &info) {
   // Validate JS calling signature
   if (info.Length() < 1) {
     Nan::ThrowTypeError("Wrong number of arguments: Expected one string");

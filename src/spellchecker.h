@@ -18,7 +18,7 @@ private:
   ~SpellChecker();
 
   static void New(const Nan::FunctionCallbackInfo<v8::Value> &info);
-  static void Check(const Nan::FunctionCallbackInfo<v8::Value> &info);
+  static void Suggestions(const Nan::FunctionCallbackInfo<v8::Value> &info);
 
   static Nan::Persistent<v8::Function> constructor;
   ZHfstOspeller *speller_;
