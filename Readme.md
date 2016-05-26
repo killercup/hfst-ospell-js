@@ -25,7 +25,22 @@ This library is currently only known to work on my machine. If you are _really_ 
 - Python (for node-gyp),
 - and `libarchive`
 
-installed – you might be able to get it working on your machine, too. 
+installed – you might be able to get it working on your machine, too.
+
+You can use `npm install killercup/hfst-ospell-js` to directly install the node module from GitHub (it is not yet published to npm).
+
+## Usage
+
+The API is pretty simple:
+
+```js
+var hfstospell = require("hfst-ospell-js");
+var path_to_dictionary = "etc/se.zhfst";
+var spellchecker = new hfstospell.SpellChecker(path_to_dictionary);
+
+console.log(spellchecker.suggestions("akkusativa"));
+// => ['akkusatiivva', 'akkusatiiva', 'akkusatiivan']
+```
 
 ## Development
 
