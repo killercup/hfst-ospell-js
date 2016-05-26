@@ -1,26 +1,29 @@
 #include "ZHfstOspeller.h"
 #include "ospell.h"
+#include <mutex>
 #include <nan.h>
 
 class SuggestionsWorker : public Nan::AsyncWorker {
 public:
   SuggestionsWorker(Nan::Callback *callback, ZHfstOspeller *speller,
-                    std::string word)
-      : Nan::AsyncWorker(callback), speller(speller), word(word) {}
+                    std::string word, std::mutex *suggestionsMutex)
+      : Nan::AsyncWorker(callback), speller(speller), word(word),
+        suggestionsMutex(suggestionsMutex) {}
   ~SuggestionsWorker() {}
 
   // Executed inside the worker-thread.
   // It is not safe to access V8, or V8 data structures here, so everything we
   // need for input and output should go on `this`.
   void Execute() {
+    std::lock_guard<std::mutex> lock(*suggestionsMutex);
+
     // Check spelling
     correct_word = speller->spell(word);
-    if (correct_word) {
-      return;
-    }
 
-    // Save suggestions
-    corrections = speller->suggest(word);
+    if (!correct_word) {
+      // Save suggestions
+      corrections = speller->suggest(word);
+    }
   }
 
   // Executed when the async work is complete this function will be run inside
@@ -67,4 +70,5 @@ private:
   ZHfstOspeller *speller;
   hfst_ol::CorrectionQueue corrections;
   bool correct_word;
+  std::mutex *suggestionsMutex;
 };

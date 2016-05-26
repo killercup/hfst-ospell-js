@@ -1,10 +1,11 @@
 #include "spellchecker.h"
 #include "suggestions_worker.cc"
+#include <mutex>
 #include <nan.h>
 
 Nan::Persistent<v8::Function> SpellChecker::constructor;
 
-SpellChecker::SpellChecker(ZHfstOspeller *speller) : speller_(speller) {}
+SpellChecker::SpellChecker(ZHfstOspeller *speller) : speller(speller) {}
 
 SpellChecker::~SpellChecker() {}
 
@@ -114,5 +115,6 @@ void SpellChecker::Suggestions(
   SpellChecker *obj = Nan::ObjectWrap::Unwrap<SpellChecker>(info.Holder());
 
   Nan::Callback *callback = new Nan::Callback(info[1].As<v8::Function>());
-  Nan::AsyncQueueWorker(new SuggestionsWorker(callback, obj->speller_, word));
+  Nan::AsyncQueueWorker(new SuggestionsWorker(callback, obj->speller, word,
+                                              &obj->suggestionsMutex));
 }

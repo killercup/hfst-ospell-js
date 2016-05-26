@@ -1,6 +1,21 @@
 import test from 'ava';
 import {SpellChecker} from "./";
 
+/**
+ * Loosely compare two arrays
+ *
+ * @template T
+ * @param {test.ContextualTestContext} t
+ * @param {Array<T>} value
+ * @param {Array<T>} expected
+ */
+function about_the_same(t, value, expected) {
+  value.forEach((entry, index) => {
+    t.deepEqual(entry.sort(), expected[index].sort(), `(Comparing index ${index})`);
+  });
+}
+
+
 test("constructor works", (t) => {
   const spellchecker = new SpellChecker("etc/se.zhfst");
 
@@ -41,19 +56,21 @@ test("no spelling suggestions possible", async (t) => {
   t.deepEqual(suggestions, []);
 });
 
-// test("concurrent spelling suggestions", async (t) => {
-//   const spellchecker = new SpellChecker("etc/se.zhfst");
-//   const suggestions = await Promise.all([
-//     spellchecker.suggestions("akkusativa"),
-//     spellchecker.suggestions("qwert"),
-//     spellchecker.suggestions("nutella"),
-//     spellchecker.suggestions("straßenbahn"),
-//   ]);
+test("concurrent spelling suggestions", async (t) => {
+  const spellchecker = new SpellChecker("etc/se.zhfst");
+  const suggestions = await Promise.all([
+    spellchecker.suggestions("akkusativa"),
+    spellchecker.suggestions("qwert"),
+    spellchecker.suggestions("nutella"),
+    spellchecker.suggestions("straßenbahn"),
+  ]);
 
-//   t.deepEqual(suggestions, [
-//     ['akkusatiivva', 'akkusatiiva', 'akkusatiivan'],
-//     ['Bert', 'Evert', 'Mweru', 'Zwart', 'Uwet', 'Kert', 'Owet', 'Gjert', 'Egert', 'Gert'],
-//     ['Iuella', 'Puteola', 'njiella', 'Uutela', 'nulla', 'Sutela', 'Juella', 'Stella'],
-//     [],
-//   ]);
-// });
+  // Only check the values are all present but ignore the order. (For some
+  // reason, the order of suggestions is different on Linux and OS X...)
+  about_the_same(t, suggestions, [
+    ['akkusatiivva', 'akkusatiiva', 'akkusatiivan'],
+    ['Bert', 'Evert', 'Mweru', 'Zwart', 'Uwet', 'Kert', 'Owet', 'Gjert', 'Egert', 'Gert'],
+    ['Iuella', 'Puteola', 'njiella', 'Uutela', 'nulla', 'Sutela', 'Juella', 'Stella'],
+    []]
+  );
+});

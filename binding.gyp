@@ -38,12 +38,13 @@
         'VERSION="0.4.1"',
         'ZHFST_EXTRACT_TO_MEM=1',
       ],
-      "include_dirs" : [ 
+      "include_dirs" : [
           "<!(node -e \"require('nan')\")",
           "lib/tinyxml2",
           "lib/hfst-ospell",
       ],
       "cflags": [
+        "-Wall", "-std=c++11",
         "<!(pkg-config --cflags libarchive)",
       ],
       "link_settings": {
@@ -51,14 +52,17 @@
           "<!(pkg-config --libs libarchive)",
         ],
       },
-      
+
       # Enable exceptions
       'cflags!': [ '-fno-exceptions' ],
       'cflags_cc!': [ '-fno-exceptions' ],
       'conditions': [
         ['OS=="mac"', {
           'xcode_settings': {
-            'GCC_ENABLE_CPP_EXCEPTIONS': 'YES'
+            'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
+            'CLANG_CXX_LANGUAGE_STANDARD':'c++11',
+            'CLANG_CXX_LIBRARY': 'libc++',
+            'MACOSX_DEPLOYMENT_TARGET': '10.7'
           }
         }]
       ]

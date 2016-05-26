@@ -7,6 +7,7 @@
     "test": "ava"
   },
   "author": "Pascal Hertleif <killercup@gmail.com> (http://pascalhertleif.de/)",
+  "repository": "https://github.com/killercup/hfst-ospell-js.git",
   "license": "MIT",
   "dependencies": {
     "nan": "^2.3.3",

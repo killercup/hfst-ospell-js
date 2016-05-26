@@ -2,6 +2,7 @@
 #define SpellChecker_H
 
 #include <nan.h>
+#include <mutex>
 
 #include "ZHfstOspeller.h"
 #include "ospell.h"
@@ -21,7 +22,8 @@ private:
   static void Suggestions(const Nan::FunctionCallbackInfo<v8::Value> &info);
 
   static Nan::Persistent<v8::Function> constructor;
-  ZHfstOspeller *speller_;
+  ZHfstOspeller *speller;
+  std::mutex suggestionsMutex;
 };
 
 #endif

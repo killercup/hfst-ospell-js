@@ -62,6 +62,7 @@ Use `npm test` to verify the library works on the node side. Please note that th
 
 - [x] Make it compile!
 - [x] Async with a small JS wrapper for Promise support
+- [ ] Investigate thread safety of hfst-ospell (we are currently using Mutexes to only ever search for one suggestion at a time)
 - [x] Use a constructor for the wrapped C++ object so we can re-use the loaded spell checker
 - [ ] Everything with TODO and FIXME in code!
 - [x] Compile tinyxml2 ourselves (it's just one file)
