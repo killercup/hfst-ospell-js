@@ -1,35 +1,76 @@
 import test from 'ava';
 import {SpellChecker} from "./";
 
+/**
+ * Loosely compare two arrays
+ *
+ * @template T
+ * @param {test.ContextualTestContext} t
+ * @param {Array<T>} value
+ * @param {Array<T>} expected
+ */
+function about_the_same(t, value, expected) {
+  value.forEach((entry, index) => {
+    t.deepEqual(entry.sort(), expected[index].sort(), `(Comparing index ${index})`);
+  });
+}
+
+
 test("constructor works", (t) => {
-    const spellchecker = new SpellChecker("etc/se.zhfst");
+  const spellchecker = new SpellChecker("etc/se.zhfst");
 
-    t.throws(() => new SpellChecker(), /wrong number of arguments/i);
-    t.throws(() => new SpellChecker(2), /should be a string/i);
+  // t.throws(() => SpellChecker(), /Cannot call (\w*) as a function/i);
+  t.throws(() => new SpellChecker(), /wrong number of arguments/i);
+  t.throws(() => new SpellChecker(2), /should be a string/i);
 });
 
-test("spell check signature", (t) => {
-    const spellchecker = new SpellChecker("etc/se.zhfst");
+test("spell check signature", async (t) => {
+  const spellchecker = new SpellChecker("etc/se.zhfst");
+  t.plan(2);
 
-    t.throws(() => spellchecker.suggestions(), /wrong number of arguments/i);
-    t.throws(() => spellchecker.suggestions(2), /should be a string/i);
+  spellchecker.suggestions()
+    .catch(err => t.regex(err.message, /first argument should be a string/i));
+
+  spellchecker.suggestions(2)
+    .catch(err => t.regex(err.message, /first argument should be a string/i));
 });
 
-test("no suggestions for correct word", (t) => {
-    const spellchecker = new SpellChecker("etc/se.zhfst");
+test("no suggestions for correct word", async (t) => {
+  const spellchecker = new SpellChecker("etc/se.zhfst");
+  const suggestions = await spellchecker.suggestions("Lákku");
 
-    t.deepEqual(spellchecker.suggestions("Lákku"), false);
+  t.deepEqual(suggestions, false);
 });
 
-test("spelling suggestions", (t) => {
-    const spellchecker = new SpellChecker("etc/se.zhfst");
+test("spelling suggestions", async (t) => {
+  const spellchecker = new SpellChecker("etc/se.zhfst");
+  const suggestions = await spellchecker.suggestions("akkusativa");
 
-    t.deepEqual(spellchecker.suggestions("akkusativa"),
-        ['akkusatiivva', 'akkusatiiva', 'akkusatiivan']);
+  t.deepEqual(suggestions, ['akkusatiivva', 'akkusatiiva', 'akkusatiivan']);
 });
 
-test("no spelling suggestions possible", (t) => {
-    const spellchecker = new SpellChecker("etc/se.zhfst");
+test("no spelling suggestions possible", async (t) => {
+  const spellchecker = new SpellChecker("etc/se.zhfst");
+  const suggestions = await spellchecker.suggestions("apfelkuchen");
 
-    t.deepEqual(spellchecker.suggestions("apfelkuchen"), []);
+  t.deepEqual(suggestions, []);
+});
+
+test("concurrent spelling suggestions", async (t) => {
+  const spellchecker = new SpellChecker("etc/se.zhfst");
+  const suggestions = await Promise.all([
+    spellchecker.suggestions("akkusativa"),
+    spellchecker.suggestions("qwert"),
+    spellchecker.suggestions("nutella"),
+    spellchecker.suggestions("straßenbahn"),
+  ]);
+
+  // Only check the values are all present but ignore the order. (For some
+  // reason, the order of suggestions is different on Linux and OS X...)
+  about_the_same(t, suggestions, [
+    ['akkusatiivva', 'akkusatiiva', 'akkusatiivan'],
+    ['Bert', 'Evert', 'Mweru', 'Zwart', 'Uwet', 'Kert', 'Owet', 'Gjert', 'Egert', 'Gert'],
+    ['Iuella', 'Puteola', 'njiella', 'Uutela', 'nulla', 'Sutela', 'Juella', 'Stella'],
+    []]
+  );
 });

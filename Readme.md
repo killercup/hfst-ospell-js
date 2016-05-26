@@ -38,8 +38,16 @@ var hfstospell = require("hfst-ospell-js");
 var path_to_dictionary = "etc/se.zhfst";
 var spellchecker = new hfstospell.SpellChecker(path_to_dictionary);
 
-console.log(spellchecker.suggestions("akkusativa"));
+// .suggestions(string) returns a Promise
+spellchecker.suggestions("akkusativa")
+.then((suggestions) => console.log(suggestions))
+.catch((error) => console.error(suggestions));
 // => ['akkusatiivva', 'akkusatiiva', 'akkusatiivan']
+
+// But you can also use it with a callback
+spellchecker.suggestions("akkusativa", (error, suggestions) =>
+  console.log(error, suggestions));
+// => null, ['akkusatiivva', 'akkusatiiva', 'akkusatiivan']
 ```
 
 ## Development
@@ -53,7 +61,8 @@ Use `npm test` to verify the library works on the node side. Please note that th
 ## TODO
 
 - [x] Make it compile!
-- [ ] Async with a small JS wrapper for Promise support
+- [x] Async with a small JS wrapper for Promise support
+- [ ] Investigate thread safety of hfst-ospell (we are currently using Mutexes to only ever search for one suggestion at a time)
 - [x] Use a constructor for the wrapped C++ object so we can re-use the loaded spell checker
 - [ ] Everything with TODO and FIXME in code!
 - [x] Compile tinyxml2 ourselves (it's just one file)

@@ -1,9 +1,11 @@
 #include "spellchecker.h"
+#include "suggestions_worker.cc"
+#include <mutex>
 #include <nan.h>
 
 Nan::Persistent<v8::Function> SpellChecker::constructor;
 
-SpellChecker::SpellChecker(ZHfstOspeller *speller) : speller_(speller) {}
+SpellChecker::SpellChecker(ZHfstOspeller *speller) : speller(speller) {}
 
 SpellChecker::~SpellChecker() {}
 
@@ -92,12 +94,17 @@ void SpellChecker::New(const Nan::FunctionCallbackInfo<v8::Value> &info) {
 void SpellChecker::Suggestions(
     const Nan::FunctionCallbackInfo<v8::Value> &info) {
   // Validate JS calling signature
-  if (info.Length() < 1) {
-    Nan::ThrowTypeError("Wrong number of arguments: Expected one string");
+  if (info.Length() != 2) {
+    Nan::ThrowTypeError(
+        "Wrong number of arguments: Expected one string and one callback");
     return;
   }
   if (!info[0]->IsString()) {
-    Nan::ThrowTypeError("Argument should be a string");
+    Nan::ThrowTypeError("First argument should be a string");
+    return;
+  }
+  if (!info[1]->IsFunction()) {
+    Nan::ThrowTypeError("Second argument should be a function");
     return;
   }
 
@@ -107,32 +114,7 @@ void SpellChecker::Suggestions(
   v8::Isolate *isolate = info.GetIsolate();
   SpellChecker *obj = Nan::ObjectWrap::Unwrap<SpellChecker>(info.Holder());
 
-  // Check spelling
-  if (obj->speller_->spell(word)) {
-    // That word actually spelled correctly!
-    info.GetReturnValue().Set(v8::Boolean::New(isolate, false));
-    return;
-  }
-
-  hfst_ol::CorrectionQueue corrections = obj->speller_->suggest(word);
-
-  v8::Handle<v8::Array> correctionsArray =
-      v8::Array::New(isolate, corrections.size());
-
-  // Return an empty result if there was an error creating the array.
-  if (correctionsArray.IsEmpty()) {
-    info.GetReturnValue().Set(v8::Handle<v8::Array>());
-    return;
-  }
-
-  // Populate the array
-  unsigned int i = 0;
-  while (corrections.size() > 0) {
-    const std::string &corr = corrections.top().first;
-    correctionsArray->Set(i, v8::String::NewFromUtf8(isolate, corr.c_str()));
-    corrections.pop();
-    i++;
-  }
-
-  info.GetReturnValue().Set(correctionsArray);
+  Nan::Callback *callback = new Nan::Callback(info[1].As<v8::Function>());
+  Nan::AsyncQueueWorker(new SuggestionsWorker(callback, obj->speller, word,
+                                              &obj->suggestionsMutex));
 }
