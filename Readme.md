@@ -19,15 +19,15 @@ to download the dictionary for North Sámi.
 
 ## Install
 
-This library is currently only known to work on my machine. If you are _really_ lucky – and you happen to have
+To install this module, you first need to make sure you have
 
 - a C++ compiler,
 - Python (for node-gyp),
-- and `libarchive`
+- and `libarchive` (using e.g. `apt-get install libarchive-dev` or `brew install libarchive && brew link libarchive --force`)
 
-installed – you might be able to get it working on your machine, too.
+installed.
 
-You can use `npm install killercup/hfst-ospell-js` to directly install the node module from GitHub (it is not yet published to npm).
+You can then use `npm install killercup/hfst-ospell-js` to install the node module directly from GitHub (it is not yet published to npm).
 
 ## Usage
 
