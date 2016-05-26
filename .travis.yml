@@ -1,0 +1,11 @@
+sudo: required
+dist: trusty
+language: node_js
+node_js:
+- "4"
+- "6"
+before_install:
+- sudo apt-get -qq update
+- sudo apt-get install -y libarchive-dev curl
+- mkdir etc
+- curl http://divvun.no/static_files/zhfsts/se.zhfst > etc/se.zhfst

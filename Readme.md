@@ -2,6 +2,8 @@
 
 This is a simple work-in-progress library which aims to offer spell checking using [Hfst-ospell](https://github.com/hfst/hfst-ospell) in node.js.
 
+[![Build Status](https://travis-ci.org/killercup/hfst-ospell-js.svg?branch=master)](https://travis-ci.org/killercup/hfst-ospell-js)
+
 ## Note on dictionary files
 
 You can find several dictionaries on [divvun.no](http://www.divvun.no/korrektur/otherapps.html). Many are under the GPL, for some there is no license specified, though.
