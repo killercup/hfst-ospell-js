@@ -3,6 +3,7 @@
     {
       "target_name": "hfst-ospell",
       "sources": [
+        "lib/tinyxml2/tinyxml2.cpp",
         "lib/hfst-ospell/ospell.cc",
         "lib/hfst-ospell/ZHfstOspeller.cc",
         "lib/hfst-ospell/hfst-ol.cc",
@@ -39,15 +40,14 @@
       ],
       "include_dirs" : [ 
           "<!(node -e \"require('nan')\")",
+          "lib/tinyxml2",
+          "lib/hfst-ospell",
       ],
       "cflags": [
-        "<!(pkg-config --cflags tinyxml2)",
         "<!(pkg-config --cflags libarchive)",
-
       ],
       "link_settings": {
         "libraries": [
-          "<!(pkg-config --libs tinyxml2)",
           "<!(pkg-config --libs libarchive)",
         ],
       },

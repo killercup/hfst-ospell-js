@@ -17,7 +17,13 @@ to download the dictionary for North Sámi.
 
 ## Install
 
-This library is currently only known to work on my machine. If you are _really_ lucky – and you happen to have `tinyxml2` and `libarchive` installed – you might be able to get it working on your machine, too.
+This library is currently only known to work on my machine. If you are _really_ lucky – and you happen to have
+
+- a C++ compiler,
+- Python (for node-gyp),
+- and `libarchive`
+
+installed – you might be able to get it working on your machine, too. 
 
 ## Development
 
@@ -31,7 +37,7 @@ Use `npm test` to verify the library works on the node side. Please note that th
 
 - [x] Make it compile!
 - [ ] Async with a small JS wrapper for Promise support
-- [ ] Use a constructor for the wrapped C++ object so we can re-use the loaded spell checker
+- [x] Use a constructor for the wrapped C++ object so we can re-use the loaded spell checker
 - [ ] Everything with TODO and FIXME in code!
-- [ ] Compile tinyxml2 ourselves (it's just one file)
+- [x] Compile tinyxml2 ourselves (it's just one file)
 - [ ] Compile libarchive ourselves (it's a truckload of stuff)

@@ -3,8 +3,8 @@
 
 #include <nan.h>
 
-#import "ZHfstOspeller.h"
-#import "ospell.h"
+#include "ZHfstOspeller.h"
+#include "ospell.h"
 
 using hfst_ol::ZHfstOspeller;
 using hfst_ol::Transducer;
