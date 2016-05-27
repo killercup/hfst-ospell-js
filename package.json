@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "preinstall": "git submodule -q update --init --recursive",
+    "preinstall": "git submodule -q update --init --recursive; node-gyp configure build",
     "test": "ava"
   },
   "author": "Pascal Hertleif <killercup@gmail.com> (http://pascalhertleif.de/)",
