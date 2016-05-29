@@ -29,6 +29,8 @@ installed.
 
 You can then use `npm install killercup/hfst-ospell-js` to install the node module directly from GitHub (it is not yet published to npm).
 
+**Note:** NPM versions older than 3.7.0 do not resolve git submodules when installing, so you may need to clone this repository manually and use `npm install` with a local path.
+
 ## Usage
 
 The API is pretty simple:
